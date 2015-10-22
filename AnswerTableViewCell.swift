@@ -19,26 +19,64 @@ class AnswerTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        //votesLabel.text = "\(questionSet.questionsArray[questionIndex].answers[answerIndex].votes)"
     }
     @IBAction func upVote(sender: AnyObject) {
-        votes = votes+1
-        questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
-        NectoClient.update(questionSet)
-        votesLabel.text = "\(votes)"
+        if answer.usersAndLikes[userEmail] == nil{
+            answer.usersAndLikes[userEmail] = Like.Like.rawValue
+            votes!++
+            votesLabel.text = "\(votes)"
+            questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
+            questionSet.questionsArray[questionIndex].answers[answerIndex] = answer
+            NectoClient.update(questionSet)
+        }else if answer.usersAndLikes[userEmail] != Like.Like.rawValue{
+            // if the user has unliked this and wants to go to neutral
+            if answer.usersAndLikes[userEmail] == Like.Unlike.rawValue{
+                answer.usersAndLikes[userEmail] = Like.Neutral.rawValue
+            // else if the user is on neutral and wants to like it
+            }else{
+                answer.usersAndLikes[userEmail] = Like.Like.rawValue
+            }
+            votes!++
+            votesLabel.text = "\(votes)"
+            questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
+            questionSet.questionsArray[questionIndex].answers[answerIndex] = answer
+            NectoClient.update(questionSet)
+        }
     }
     
     @IBAction func downVote(sender: AnyObject) {
-        votes = votes-1
-        questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
-        NectoClient.update(questionSet)
-        votesLabel.text = "\(votes)"
+        if answer.usersAndLikes[userEmail] == nil{
+            answer.usersAndLikes[userEmail] = Like.Unlike.rawValue
+            votes!--
+            votesLabel.text = "\(votes)"
+            questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
+            questionSet.questionsArray[questionIndex].answers[answerIndex] = answer
+            NectoClient.update(questionSet)
+        }else if answer.usersAndLikes[userEmail] != Like.Unlike.rawValue{
+            votes!--
+            votesLabel.text = "\(votes)"
+            // if the user is going to unlike from neutral
+            if answer.usersAndLikes[userEmail] == Like.Neutral.rawValue{
+                answer.usersAndLikes[userEmail] = Like.Unlike.rawValue
+            }
+            // if the user is going to neutral from like
+            else if answer.usersAndLikes[userEmail] == Like.Like.rawValue{
+                answer.usersAndLikes[userEmail] = Like.Neutral.rawValue
+            }
+            questionSet.questionsArray[questionIndex].answers[answerIndex].votes = votes
+            questionSet.questionsArray[questionIndex].answers[answerIndex] = answer
+            NectoClient.update(questionSet)
+        }
     }
-    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
+}
+enum Like: Int{
+    case Like = 0
+    case Unlike = 1
+    case Neutral = 2
 }

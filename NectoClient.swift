@@ -11,21 +11,17 @@ import Parse
 class NectoClient{
     static func update(questions: QuestionSet){
         let encodedObject = NSKeyedArchiver.archivedDataWithRootObject(questions)
-        let query: PFQuery = PFQuery(className: "QUESTIONS")
+        let query: PFQuery = PFQuery(className: "AWESOME")
         do{
-        let main = try query.getObjectWithId("nb3w1DR6aA")
+        let main = try query.getObjectWithId("WGfEurqN3G")
             main["ALL"] = encodedObject
-            main.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-            print("Object has been saved.")
-            }
-        }catch{
-                
-        }
+            try main.save()
+        }catch{}
     }
     static func get() -> QuestionSet{
         var currentQuestionSet: QuestionSet!
         do{
-            let data: AnyObject? = try PFQuery(className: "QUESTIONS").getObjectWithId("nb3w1DR6aA")["ALL"]
+            let data: AnyObject? = try PFQuery(className: "AWESOME").getObjectWithId("WGfEurqN3G")["ALL"]
             if let data: AnyObject = data{
                 currentQuestionSet = NSKeyedUnarchiver.unarchiveObjectWithData(data as! NSData) as! QuestionSet
                 return currentQuestionSet

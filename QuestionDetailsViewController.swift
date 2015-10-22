@@ -8,7 +8,7 @@
 
 import UIKit
 
-class QuestionDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class QuestionDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerField: UITextView!
@@ -24,12 +24,25 @@ class QuestionDetailsViewController: UIViewController, UITableViewDelegate, UITa
         questionLabel.text = question
         tableView.estimatedRowHeight = 90
         tableView.rowHeight = UITableViewAutomaticDimension
+        answerField.delegate = self
+        answerField.textColor = UIColor.grayColor()
+        answerField.text = "Type your answer here"
+        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.barTintColor = UIColor.redColor()
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.tableView.tableFooterView = UIView()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        textView.text = ""
+        textView.textColor = UIColor.blackColor()
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier("Answer Cell") as! AnswerTableViewCell
         cell.answerLabel.text = answers[indexPath.row].user + ": " + answers[indexPath.row].answer

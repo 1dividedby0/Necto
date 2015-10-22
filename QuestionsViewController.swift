@@ -14,9 +14,14 @@ class QuestionsViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var tableView: UITableView!
     override func viewWillAppear(animated: Bool) {
         // initialize questions
+        //var test = PFObject(className: "AWESOME")
+        //test["ALL"] =  NSKeyedArchiver.archivedDataWithRootObject(QuestionSet())
+        //test.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+          //  print("success")
+        //}
         questions = NectoClient.get().questionsArray
         tableView.reloadData()
-        print("WORKING")
+        self.tableView.tableFooterView = UIView()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +29,9 @@ class QuestionsViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.delegate = self
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableViewAutomaticDimension
+        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.barTintColor = UIColor.redColor()
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         // Do any additional setup after loading the view.
     }
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
